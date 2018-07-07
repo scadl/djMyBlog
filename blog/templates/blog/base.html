@@ -1,0 +1,33 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Django Girls blog</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Galada" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/blog.css' %}"
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>
+              <a href="https://en.wikipedia.org/wiki/Django" class="external_link" id="link_to_wiki_page">
+                Django Girls Blog
+              </a>
+              {% if user.is_authenticated %}
+              <a href="{% url 'post_new' %}">
+                <span class="glyphicon glyphicon-plus"></span>
+              </a>
+              {% endif %}
+            </h1>
+        </div>
+
+        <div class="content">
+        {% block content %}
+        {% endblock %}
+      </div>
+
+      <div style="text-align:center">
+        <a href="/admin" target="_blank">Admin UI</a>
+      </div>
+    </body>
+</html>
