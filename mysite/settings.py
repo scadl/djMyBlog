@@ -25,7 +25,7 @@ SECRET_KEY = 'd23!an&-k-t@)ty(*@h747_-6$t0&o3y#!8t@^va#f0f+u!49c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '192.168.137.1', 'scadl.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.137.1', 'scadgame.ddns.net']
 
 
 # Application definition
@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog'
+    'blog',
+    'ckeditor',
+    'colorfield',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +122,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/static/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
