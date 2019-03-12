@@ -32,3 +32,9 @@ h2{
   color: silver;
   font-style: italic;
 }
+
+.sidebar{
+  vertical-align: top;
+  border-right: solid 1px silver;
+  padding-right: 15px;
+}

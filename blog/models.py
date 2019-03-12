@@ -18,6 +18,7 @@ class Setting(models.Model):
     Header_Text_Color = ColorField(default='#FFFFFF')
     Titles_Color = ColorField(default='#CCCCCC')
     Is_Active = models.BooleanField(default=False)
+    Welcome_Mesage = RichTextField(default='Hello, Guest!')
 
     # Alternative @Save method (able to mimiqe UNIQUE key):
     # if isActive = True, check over fields with same isActive
@@ -39,8 +40,8 @@ class Setting(models.Model):
         return self.Blog_Title
 
     class Meta:
-        verbose_name = "Настройки"
-        verbose_name_plural = "Настройка"
+        verbose_name = "Шаблон"
+        verbose_name_plural = "Шаблоны"
 
 
 class Post(models.Model):
