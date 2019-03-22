@@ -9,85 +9,97 @@ fs = FileSystemStorage(location='blog/static/media')
 
 # Create your models here.
 
-class Setting(models.Model):
-    Blog_Title = models.CharField(max_length=100)
-    Blog_Description = models.CharField(max_length=200)
-    Blog_Logo = models.ImageField(upload_to='logos/', storage=fs)
+class Attachments(models.Model):
+    caption = models.CharField(max_length=150)
+    theFile = models.FileField(upload_to='attach/', storage=fs)
+    thePost = models.ForeignKey('Post', on_delete=models.SET_NULL, null=True)
     Create_date = models.DateTimeField(default=timezone.now)
-    Header_Background = ColorField(default='#CCCCCC')
-    Header_Text_Color = ColorField(default='#FFFFFF')
-    Titles_Color = ColorField(default='#CCCCCC')
-    Is_Active = models.BooleanField(default=False)
-    Welcome_Mesage = RichTextField(default='Hello, Guest!')
-
-    # Alternative @Save method (able to mimiqe UNIQUE key):
-    # if isActive = True, check over fields with same isActive
-    # All fields, who has isActive = True,
-    # but differend other fields, recives isActive=False
-    def save(self, *args, **kwargs):
-        if self.Is_Active:
-            try:
-                oset = Setting.objects.get(Is_Active=True)
-                if self != oset:
-                    oset.Is_Active = False
-                    oset.save()
-            except Setting.DoesNotExist:
-                pass
-
-        super(Setting, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.Blog_Title
+        return self.caption
 
     class Meta:
-        verbose_name = "Шаблон"
-        verbose_name_plural = "Шаблоны"
+        verbose_name = "Файл"
+        verbose_name_plural = "Файлы"
 
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
     alias = models.CharField(max_length=70, unique=True)
+    logo = models.ImageField(upload_to='logos/', storage=fs, blank=True)
     text = RichTextField()
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    category = models.ForeignKey('Category', on_delete=models.CASCADE)
-    tags = models.ManyToManyField('Tag')
-    create_date = models.DateTimeField(
-        default=timezone.now)
-    published_date = models.DateTimeField(
-        blank=True, null=True)
+    more = RichTextField(blank=True)
+    pinn = models.BooleanField()
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True, default=0)
+    tags = models.ManyToManyField('Tag', null=True, blank=True)
+    create_date = models.DateTimeField(default=timezone.now)
 
     # overrides entry title everywhere
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = "Посты"
-        verbose_name_plural = "Пост"
+        verbose_name = "Проект"
+        verbose_name_plural = "Проекты"
+
+class Sections(models.Model):
+    TEMPLATES_TYP = {
+        ('img','Image Galary'),
+        ('cat','App Catalog'),
+    }
+    Title = models.CharField(max_length=200)
+    Alias = models.CharField(max_length=70, unique=True)
+    Kind = models.CharField(choices=TEMPLATES_TYP, default='cat', max_length=3)
+    Description = models.TextField()
+
+    def __str__(self):
+        return self.Title
+
+    class Meta:
+        verbose_name = "Раздел"
+        verbose_name_plural = "Разделы"
 
 class Category(models.Model):
     Name = models.CharField(max_length=200)
     Alias = models.CharField(max_length=70, unique=True)
-    Description = models.TextField()
+    Section = models.ForeignKey('Sections', on_delete=models.SET_NULL, null=True, blank=True)
+    Description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.Name
 
     class Meta:
-        verbose_name = "Категории"
-        verbose_name_plural = "Категория"
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
 
 class Tag(models.Model):
     Name = models.CharField(max_length=200)
     Alias = models.CharField(max_length=70, unique=True)
-    Description = models.TextField()
+    Description = models.TextField(blank=True)
+    Section = models.ForeignKey('Sections', on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.Name
 
     class Meta:
-        verbose_name = "Тэги"
-        verbose_name_plural = "Тэг"
+        verbose_name = "Тэг"
+        verbose_name_plural = "Тэги"
 
-class Pages(models.Model):
-    Name = models.CharField(max_length=200)
-    Alias = models.CharField(max_length=70, unique=True)
-    Page_Text = models.TextField()
-    Page_Date = models.DateTimeField()
+class Presentation(models.Model):
+    SECTIONS = {
+        (0, 'Proclamation'),
+        (1, 'Advantages'),
+        (2, 'Partners'),
+    }
+    Title = models.CharField(max_length=150)
+    Cover = models.ImageField(upload_to='pres/', storage=fs, null=True, verbose_name='Image (Procla=bitmap, Advance=svg, Partner=banner)')
+    Text = models.TextField();
+    Kind = models.IntegerField(choices=SECTIONS, default=0)
+    Link = models.URLField()
 
     class Meta:
-        verbose_name = "Страницы"
-        verbose_name_plural = "Страница"
+        verbose_name = "Презентация"
+        verbose_name_plural = "Презентации"
+
+    def __str__(self):
+        return self.Title

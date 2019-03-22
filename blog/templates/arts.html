@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row mt-4">
+        <div class="col-2 d-flex flex-column text-center">
+            {% for Cat in theCats %}
+                <a class="btn btn-secondary m-1" href="/s_{{ theAli }}/c_{{ Cat.Alias }}">{{ Cat.Name }}</a>
+            {% endfor %}
+        </div>
+        <div class="col p-1">
+            {% for Post in thePosts %}
+                <figure class="figure float-left mx-auto d-block" style="max-width: 250px; margin: 5px">
+                    <a href="{{ Post.logo.url }}" data-toggle="lightbox" data-gallery="example-gallery" data-title="{{ Post.title }}">
+                        <img src="{{ Post.logo.url }}" class="figure-img img-thumbnail rounded">
+                    </a>
+                <figcaption class="figure-caption text-center">{{ Post.title }}</figcaption>
+                </figure>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
